@@ -20,11 +20,11 @@ function Register() {
     <div>
       <p className="display-3 text-info text-center">User Registration</p>
       <form className='w-50 mx-auto mt-3' onSubmit={handleSubmit(onFormSubmit)}>
-        <input type="text" {...register('username')} id="" className="form-control mb-3" />
-        <input type="text" {...register('password')} id="" className="form-control mb-3" />
-        <input type="email" {...register('email')} id="" className="form-control mb-3" />
+        <input type="text" {...register('username')} id="" className="form-control mb-3" placeholder='Username' />
+        <input type="text" {...register('password')} id="" className="form-control mb-3" placeholder='Password' />
+        <input type="email" {...register('email')} id="" className="form-control mb-3" placeholder='Email' />
         <input type="date" {...register('dob')} id="" className="form-control mb-3" />
-        <button className="btn-btn-success" type='submit'>Regsiter</button>
+        <button className="btn btn-success" type='submit'>Regsiter</button>
       </form>
     </div>
   )
