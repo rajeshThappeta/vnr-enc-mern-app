@@ -37,6 +37,10 @@ app.use("/user-api", userApp);
 app.use("/product-api", productApp);
 
 
+//page refresh
+app.use((req,res,next)=>{
+  res.sendFile(path.join(__dirname,'./build/index.html'))
+})
 
 //middleware to handle invalid path
 app.use((req,res,next)=>{

@@ -26,6 +26,7 @@ function UserProfile() {
     <div>
       <p className="display-5 text-primary text-end">
         Welcome ,{currentUser.username}
+        <img src={currentUser.profileImg} width='80px' alt="" style={{borderRadius:'50%'}} />
       </p>
       <button
         className="btn btn-danger text-white d-block mx-auto"

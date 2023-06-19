@@ -5,9 +5,32 @@ const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const verifyToken=require("./middlewares/verifyToken")
 const expressAsyncHandler=require('express-async-handler')
+const cloudinary=require('cloudinary').v2;
+const {CloudinaryStorage}=require('multer-storage-cloudinary')
+const multer=require('multer')
+
+//configure cloudinary
+cloudinary.config({ 
+  cloud_name: 'djqbwmvjg', 
+  api_key: '492171555336437', 
+  api_secret: 'OO5HtI8g0gpuIZyjR3m1jXa9-KE' 
+});
 
 
+//config cloudinary storage
+const cloudinaryStorage=new CloudinaryStorage({
+  cloudinary:cloudinary,
+  params:async(req,file)=>{
+    return{
+      folder:'vnrece2023',
+      public_id:'photo'+"-"+Date.now()
+    }
+  }
+})
 
+
+//configure multer
+const upload=multer({storage:cloudinaryStorage})
 
 
 //body parser middleware
@@ -41,11 +64,11 @@ userApp.get("/users/:username", expressAsyncHandler(async (req, res) => {
 }));
 
 //route to create new user
-userApp.post("/user",expressAsyncHandler( async (req, res) => {
+userApp.post("/user",upload.single('photo'),expressAsyncHandler( async (req, res) => {
   //get usersCollectionObj
   let usersCollectionObj = req.app.get("usersCollectionObj");
   //get new user from req
-  let newUser = req.body;
+  let newUser =JSON.parse(req.body.newUser);
   //verify user's existance
   let existingUser = await usersCollectionObj.findOne({
     username: newUser.username,
@@ -58,6 +81,10 @@ userApp.post("/user",expressAsyncHandler( async (req, res) => {
     let hashedPassword = await bcryptjs.hash(newUser.password, 5);
     //replace plain paassword with hashed password
     newUser.password = hashedPassword;
+    //add image url to newUser
+    newUser.profileImg=req.file.path;
+    //remove photo propertyt
+    delete newUser.photo;
     //create new user
     await usersCollectionObj.insertOne(newUser);
     res.status(201).send({ message: "created" });
